@@ -1,7 +1,8 @@
 import streamlit as st
 
 from database.db import get_quiz_questions, save_quiz_attempt
-
+from database.db import initialize_database, add_quiz_questions
+from database.quiz_data import BASIC_SCIENCE_QUESTIONS
 
 # --------------------------------------------------
 # PAGE CONFIGURATION
@@ -12,7 +13,9 @@ st.set_page_config(
     page_icon="📝",
     layout="wide"
 )
-
+# Initialize database and seed baseline questions
+initialize_database()
+add_quiz_questions(BASIC_SCIENCE_QUESTIONS)
 
 # --------------------------------------------------
 # CUSTOM STYLING
