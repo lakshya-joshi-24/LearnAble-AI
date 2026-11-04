@@ -1,6 +1,10 @@
 import streamlit as st
 
-from database.db import get_latest_profile, get_connection
+from database.db import (
+    get_latest_profile,
+    get_connection,
+    initialize_database
+)
 from engines.learner_model import get_learning_recommendations
 
 
@@ -14,7 +18,7 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
-
+initialize_database()
 
 # --------------------------------------------------
 # CUSTOM STYLING
