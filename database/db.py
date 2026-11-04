@@ -1,7 +1,8 @@
 
 import sqlite3
+from pathlib import Path
 
-DB_PATH = "database/learnable.db"
+DB_PATH = str(Path(__file__).resolve().parent / "learnable.db")
 
 
 def get_connection():
@@ -34,6 +35,7 @@ def initialize_database():
         CREATE TABLE IF NOT EXISTS quiz_questions (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             topic TEXT NOT NULL,
+            concept TEXT,
             question TEXT NOT NULL,
             option_a TEXT NOT NULL,
             option_b TEXT NOT NULL,
@@ -42,6 +44,13 @@ def initialize_database():
             correct_option TEXT NOT NULL
         )
     """)
+
+    # Migrate older databases that were created before the concept column existed.
+    cursor.execute("PRAGMA table_info(quiz_questions)")
+    quiz_question_columns = [row[1] for row in cursor.fetchall()]
+
+    if "concept" not in quiz_question_columns:
+        cursor.execute("ALTER TABLE quiz_questions ADD COLUMN concept TEXT")
 
     # Quiz Attempts Table
     cursor.execute("""
@@ -67,6 +76,46 @@ def initialize_database():
             is_correct INTEGER NOT NULL,
             FOREIGN KEY(attempt_id) REFERENCES quiz_attempts(id),
             FOREIGN KEY(question_id) REFERENCES quiz_questions(id)
+        )
+    """)
+
+    # Personalised lesson assessment history
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS lesson_attempts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            profile_id INTEGER NOT NULL,
+            concept TEXT NOT NULL,
+            score INTEGER NOT NULL,
+            total_questions INTEGER NOT NULL,
+            accuracy REAL NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (profile_id) REFERENCES student_profiles(id)
+        )
+    """)
+
+    # Topic-specific diagnostic results
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS topic_diagnostics (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            profile_id INTEGER NOT NULL,
+            topic TEXT NOT NULL,
+            score INTEGER NOT NULL,
+            total_questions INTEGER NOT NULL,
+            accuracy REAL NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (profile_id) REFERENCES student_profiles(id)
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS topic_diagnostic_responses (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            diagnostic_id INTEGER NOT NULL,
+            question TEXT NOT NULL,
+            selected_option TEXT NOT NULL,
+            correct_option TEXT NOT NULL,
+            is_correct INTEGER NOT NULL,
+            FOREIGN KEY (diagnostic_id) REFERENCES topic_diagnostics(id)
         )
     """)
 
@@ -141,14 +190,15 @@ def add_quiz_questions(questions):
         if existing_question is None:
             cursor.execute("""
                 INSERT INTO quiz_questions (
-                    topic, question,
+                    topic, concept, question,
                     option_a, option_b,
                     option_c, option_d,
                     correct_option
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """, (
                 question["topic"],
+                question.get("concept"),
                 question["question"],
                 question["option_a"],
                 question["option_b"],
