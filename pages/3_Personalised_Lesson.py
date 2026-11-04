@@ -214,7 +214,7 @@ if not profile:
     st.page_link(
         "pages/1_Learning_Profile.py",
         label="Create your learning profile",
-        icon="👤"
+        icon="➡️"
     )
     st.stop()
 
@@ -271,25 +271,25 @@ with st.sidebar:
     st.page_link(
         "app.py",
         label="Dashboard",
-        icon="🏠"
+        icon="➡️"
     )
 
     st.page_link(
         "pages/1_Learning_Profile.py",
         label="My Profile",
-        icon="👤"
+        icon="➡️"
     )
 
     st.page_link(
         "pages/2_Baseline_Assessment.py",
         label="Baseline Assessment",
-        icon="📝"
+        icon="➡️"
     )
 
     st.page_link(
         "pages/3_Personalised_Lesson.py",
         label="Learn & Practise",
-        icon="📖"
+        icon="➡️"
     )
 
     st.divider()
@@ -328,7 +328,7 @@ if recommendations.get("status") != "Ready":
     st.page_link(
         "pages/2_Baseline_Assessment.py",
         label="Complete my initial assessment",
-        icon="📝"
+        icon="➡️"
     )
 
     st.stop()

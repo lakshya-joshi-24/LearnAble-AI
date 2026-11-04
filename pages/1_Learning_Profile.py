@@ -125,25 +125,25 @@ with st.sidebar:
     st.page_link(
         "app.py",
         label="Dashboard",
-        icon="🏠"
+        icon="➡️"
     )
 
     st.page_link(
         "pages/1_Learning_Profile.py",
         label="My Profile",
-        icon="👤"
+        icon="➡️"
     )
 
     st.page_link(
         "pages/2_Baseline_Assessment.py",
         label="Baseline Assessment",
-        icon="📝"
+        icon="➡️"
     )
 
     st.page_link(
         "pages/3_Personalised_Lesson.py",
         label="Learn & Practise",
-        icon="📖"
+        icon="➡️"
     )
 
     st.divider()
