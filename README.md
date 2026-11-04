@@ -154,7 +154,19 @@ Suggested demonstration flow:
 5. Explore personalised learning recommendations.
 
 ## 9. Screenshots
+## 🖥️ Application Screenshots
 
+### Student Dashboard
+
+![LearnAble AI Dashboard](dashboard.png.png)
+
+### Baseline Assessment
+
+![Baseline Assessment](baseline-assessment.png)
+
+### Personalised Learning
+
+![Personalised Learning](personalised-learning.png)
 
 
 
